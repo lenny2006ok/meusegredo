@@ -1,5 +1,5 @@
-CREATE DATABASE IF NOT EXISTS meusegredo CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE meusegredo;
+CREATE DATABASE IF NOT EXISTS banco_site CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE banco_site;
 
 CREATE TABLE IF NOT EXISTS posts (
   id INT AUTO_INCREMENT PRIMARY KEY,
