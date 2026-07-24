@@ -1,0 +1,18 @@
+<% comments.forEach(function(comment) { %>
+  <div class="comment-card" data-id="<%= comment.id %>">
+    <div class="comment-header">
+      <strong><%= comment.pseudonym %></strong>
+      <span><%= new Date(comment.created_at).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' }) %></span>
+    </div>
+    <p><%= comment.text %></p>
+    <div class="comment-actions">
+      <button class="button button-ghost">👍 <span><%= comment.likes %></span></button>
+      <button class="button button-ghost reply-button" data-id="<%= comment.id %>">Responder</button>
+    </div>
+    <% if (comment.children && comment.children.length) { %>
+      <div class="comment-children">
+        <%- include('partials/comment', { comments: comment.children }) %>
+      </div>
+    <% } %>
+  </div>
+<% }) %>

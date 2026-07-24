@@ -1,0 +1,44 @@
+<%- include('partials/header', { title: post.title }) %>
+<main class="page-content page-detail">
+  <input type="hidden" id="csrf-token" value="<%= csrfToken %>" />
+  <article class="detail-card">
+    <div class="detail-meta">
+      <span class="category-pill"><%= categories.find(c => c.key === post.category)?.icon || '🤫' %> <%= categories.find(c => c.key === post.category)?.label || 'Sem categoria' %></span>
+      <span>Publicado em <%= new Date(post.created_at).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' }) %></span>
+    </div>
+    <h1><%= post.title %></h1>
+    <div class="detail-author">
+      <span><strong><%= post.pseudonym %></strong></span>
+      <% if (post.city) { %><span><%= post.city %></span><% } %>
+      <% if (post.age) { %><span><%= post.age %> anos</span><% } %>
+    </div>
+    <div class="detail-body"><p><%= post.secret_text.replace(/\n/g, '<br/>') %></p></div>
+    <div class="detail-actions">
+      <button class="button button-ghost" data-action="like" data-id="<%= post.id %>">👍 Curtir</button>
+      <button class="button button-ghost" data-action="dislike" data-id="<%= post.id %>">👎 Não Curtir</button>
+      <button class="button button-outline" id="share-button">Compartilhar</button>
+      <button class="button button-outline" id="report-button">Denunciar</button>
+      <span><%= post.likes %> curtidas</span>
+      <span><%= post.views %> visualizações</span>
+    </div>
+    <section class="comments-section">
+      <h2>Comentários</h2>
+      <div class="comment-form">
+        <textarea id="comment-text" rows="4" placeholder="Escreva um comentário anônimo..."></textarea>
+        <button id="submit-comment" class="button button-red">Enviar comentário</button>
+      </div>
+      <div id="comments-list">
+        <%- include('partials/comment', { comments: comments }) %>
+      </div>
+    </section>
+  </article>
+</main>
+<div class="modal" id="report-modal" aria-hidden="true">
+  <div class="modal-content">
+    <h3>Denunciar conteúdo</h3>
+    <textarea id="report-reason" rows="4" placeholder="Explique o motivo da denúncia..."></textarea>
+    <button id="send-report" class="button button-red">Enviar denúncia</button>
+    <button id="close-report" class="button button-outline">Cancelar</button>
+  </div>
+</div>
+<%- include('partials/footer') %>

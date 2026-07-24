@@ -1,0 +1,43 @@
+<%- include('partials/header', { title: 'Painel de Administração' }) %>
+<main class="page-content page-admin">
+  <div class="admin-grid">
+    <section class="admin-card">
+      <h1>Denúncias recentes</h1>
+      <% if (reports.length === 0) { %>
+        <p class="small">Nenhuma denúncia pendente.</p>
+      <% } else { %>
+        <ul class="report-list">
+          <% reports.forEach(report => { %>
+            <li>
+              <strong><%= report.post_title || 'Comentário' %></strong>
+              <p><%= report.reason || 'Sem motivo especificado' %></p>
+              <form method="POST" action="/admin/delete-post">
+                <input type="hidden" name="postId" value="<%= report.post_id %>" />
+                <button class="button button-outline">Remover post</button>
+              </form>
+            </li>
+          <% }) %>
+        </ul>
+      <% } %>
+    </section>
+    <section class="admin-card">
+      <h1>Posts recentes</h1>
+      <ul class="report-list">
+        <% recentPosts.forEach(post => { %>
+          <li>
+            <strong><a href="/segredo/<%= post.id %>"><%= post.title %></a></strong>
+            <span><%= post.views %> views • <%= post.likes %> likes</span>
+            <form method="POST" action="/admin/delete-post">
+              <input type="hidden" name="postId" value="<%= post.id %>" />
+              <button class="button button-outline">Excluir</button>
+            </form>
+          </li>
+        <% }) %>
+      </ul>
+    </section>
+  </div>
+  <form method="POST" action="/admin/logout" style="margin-top: 24px;">
+    <button class="button button-ghost">Sair</button>
+  </form>
+</main>
+<%- include('partials/footer') %>

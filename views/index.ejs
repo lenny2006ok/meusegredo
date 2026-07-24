@@ -1,0 +1,43 @@
+<%- include('partials/header', { title: 'Feed Principal' }) %>
+<main class="page-content">
+  <div class="feed-header">
+    <div class="filters">
+      <a class="filter <%= filter === 'recent' ? 'active' : '' %>" href="/?filter=recent">Mais Recentes</a>
+      <a class="filter <%= filter === 'likes' ? 'active' : '' %>" href="/?filter=likes">Mais Curtidos</a>
+      <a class="filter <%= filter === 'comments' ? 'active' : '' %>" href="/?filter=comments">Mais Comentados</a>
+      <a class="filter <%= filter === 'random' ? 'active' : '' %>" href="/?filter=random">Aleatório</a>
+      <a class="filter <%= filter === 'trending' ? 'active' : '' %>" href="/?filter=trending">🔥 Trending</a>
+    </div>
+    <div class="category-bar">
+      <% categories.forEach(cat => { %>
+        <a href="/?category=<%= cat.key %>"><%= cat.icon %> <%= cat.label %></a>
+      <% }) %>
+    </div>
+  </div>
+  <div class="post-feed">
+    <% if (success) { %>
+      <div class="success-banner"><%= success %></div>
+    <% } %>
+    <% if (posts.length === 0) { %>
+      <div class="empty-state">Nenhum segredo encontrado. Seja o primeiro a compartilhar.</div>
+    <% } %>
+    <% posts.forEach(post => { %>
+      <article class="post-card">
+        <div class="post-meta">
+          <span class="post-category"><%= categories.find(c => c.key === post.category)?.icon || '🤫' %> <%= categories.find(c => c.key === post.category)?.label || 'Sem categoria' %></span>
+          <span class="post-time"><%= new Date(post.created_at).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' }) %></span>
+        </div>
+        <h2><a href="/segredo/<%= post.id %>"><%= post.title %></a></h2>
+        <div class="post-details">
+          <span><strong><%= post.pseudonym %></strong></span>
+          <span><%= post.views %> visualizações</span>
+          <span><%= post.likes %> curtidas</span>
+          <span><%= post.comment_count %> comentários</span>
+        </div>
+        <p><%= post.secret_text.substring(0, 150) %><%= post.secret_text.length > 150 ? '...' : '' %></p>
+        <a class="button button-outline" href="/segredo/<%= post.id %>">Ler mais</a>
+      </article>
+    <% }) %>
+  </div>
+</main>
+<%- include('partials/footer') %>
