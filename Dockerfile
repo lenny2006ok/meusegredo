@@ -1,22 +1,24 @@
-FROM node:18-alpine
+FROM php:8.3-apache
 
-# Definir diretório de trabalho
-WORKDIR /app
+# Instalar extensões PHP necessárias (PDO MySQL)
+RUN docker-php-ext-install pdo pdo_mysql
 
-# Configurar variáveis de ambiente para produção
-ENV NODE_ENV=production
+# Habilitar o módulo mod_rewrite do Apache
+RUN a2enmod rewrite
 
-# Copiar arquivos de definição de dependências primeiro para cache do Docker
-COPY package*.json ./
+# Definir o diretório de trabalho do Apache
+WORKDIR /var/www/html
 
-# Instalar dependências de produção apenas (limpando o cache do npm em seguida)
-RUN npm ci --only=production && npm cache clean --force
-
-# Copiar os arquivos e pastas da aplicação
+# Copiar os arquivos da aplicação para o contêiner
 COPY . .
 
-# Expor a porta em que a aplicação Express roda
-EXPOSE 3000
+# Ajustar as permissões para o servidor Apache (www-data) conseguir escrever nos diretórios necessários (como logs)
+RUN chown -R www-data:www-data /var/www/html \
+    && chmod -R 755 /var/www/html \
+    && chmod -R 777 /var/www/html/logs
 
-# Comando para iniciar a aplicação
-CMD ["npm", "start"]
+# Configurar a porta do Apache
+EXPOSE 80
+
+# Iniciar o servidor Apache em primeiro plano
+CMD ["apache2-foreground"]
